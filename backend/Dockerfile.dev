@@ -1,0 +1,6 @@
+FROM golang:1.19.1
+WORKDIR app
+COPY entrypoint /entrypoint
+ENTRYPOINT ["/entrypoint"]
+CMD ["go", "run", ".", "serve", "--http", "0.0.0.0:8090", "--dir", "/pb_data", "--debug"]
+EXPOSE 8090

@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+set -e
+go run . migrate --dir /pb_data
+exec "$@"

@@ -1,0 +1,40 @@
+version: "3.9"
+
+volumes:
+  backend-data:
+  backend-go-data:
+
+services:
+  web:
+    container_name: damagecontrol-app
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    command: [nginx-debug, '-g', 'daemon off;']
+    ports:
+      - "8000:80"
+
+
+  backend:
+    container_name: damagecontrol-backend
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    working_dir: /app
+    ports:
+      - "8090:8090"
+    volumes:
+      - backend-data:/pb_data
+      - backend-go-data:/go
+      - ./backend:/app
+
+  frontend:
+    container_name: damagecontrol-frontend
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+
