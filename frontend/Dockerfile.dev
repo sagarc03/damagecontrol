@@ -1,7 +1,8 @@
 FROM node:lts
-WORKDIR /app
+WORKDIR /usr/app/app
 RUN npm install -g npm@8.19.2
 COPY entrypoint /entrypoint
 ENTRYPOINT ["/entrypoint"]
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
 EXPOSE 3000
+EXPOSE 8000
