@@ -1,34 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import 'tailwindcss/tailwind.css'
-import './App.css'
+import {
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+  useLocation,
+  Navigate,
+  Outlet
+} from 'react-router-dom'
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App: React.FC = (): React.ReactElement => {
+  const navigate = useNavigate()
+  const location = useLocation()
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card font-bold">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+    <Routes>
+      <Route
+        element={
+          <>
+            <h1>Base layout</h1>
+            <ul>
+              <li>
+                <Link to="/">Root</Link>
+              </li>
+              <li>
+                <Link to="/login">Login</Link>
+              </li>
+            </ul>
+            <Outlet />
+          </>
+        }
+      >
+        <Route path="/" element={<h1>Root</h1>} />
+        <Route path="/login" element={<h1>Login</h1>} />
+      </Route>
+    </Routes>
   )
 }
 

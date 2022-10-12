@@ -6,7 +6,7 @@ volumes:
 
 services:
   web:
-    container_name: damagecontrol-app
+    container_name: damagecontrol_app
     image: nginx
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
@@ -14,9 +14,8 @@ services:
     ports:
       - "8000:80"
 
-
   backend:
-    container_name: damagecontrol-backend
+    container_name: damagecontrol_backend
     build: 
       context: ./backend
       dockerfile: Dockerfile.dev
@@ -27,7 +26,7 @@ services:
       - ./backend:/app
 
   frontend:
-    container_name: damagecontrol-frontend
+    container_name: damagecontrol_frontend
     build: 
       context: ./frontend
       dockerfile: Dockerfile.dev
@@ -35,7 +34,7 @@ services:
       - ./frontend:/usr/app/app
 
   frontend-test:
-    container_name: damagecontrol-frontend-test
+    container_name: damagecontrol_frontend_test
     build: 
       context: ./frontend
       dockerfile: Dockerfile.dev
@@ -44,6 +43,3 @@ services:
       - "8001:8001"
     volumes:
       - ./frontend:/usr/app/app
-
-
-
