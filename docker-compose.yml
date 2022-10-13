@@ -39,6 +39,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.dev
     command: npm run test:ui
+    entrypoint: ""
     ports:
       - "8001:8001"
     volumes:
