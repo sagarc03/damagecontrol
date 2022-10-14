@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useLocation, useNavigate, Link as RouterLink } from 'react-router-dom'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
@@ -13,35 +13,29 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  InputRightElement,
-  FormHelperText,
   useToast,
   FormErrorMessage,
+  FormHelperText,
   Link
 } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import { usePocketBase } from '../../provider/pb'
-import { ClientResponseError } from 'pocketbase'
 
-const Login = () => {
+const ResetPassword = () => {
   const backend = usePocketBase()
   const toast = useToast()
   const location = useLocation()
   const navigate = useNavigate()
-
-  const [showPassword, setShowPassword] = useState<boolean>(false)
-  const handleShowClick = () => setShowPassword(!showPassword)
 
   const initialValue = {
     email: '',
     password: ''
   }
   const validationSchema = Yup.object({
-    email: Yup.string().email().required(),
-    password: Yup.string().required()
+    email: Yup.string().email().required()
   })
   useEffect(() => {
-    document.title = `Login`
+    document.title = `Reset Password`
   })
 
   return (
@@ -60,27 +54,16 @@ const Login = () => {
         mb="2"
       >
         <Avatar bg="teal.500" />
-        <Heading color="teal.400">Welcome</Heading>
+        <Heading color="teal.400">Reset Password</Heading>
         <Box minW={{ base: '90%', md: '468px' }}>
           <Formik
             initialValues={initialValue}
             validationSchema={validationSchema}
-            onSubmit={({ email, password }, { resetForm }) =>
+            onSubmit={({ email }) =>
               backend.users
-                .authViaEmail(email, password)
+                .requestPasswordReset(email)
                 .then(() => navigate(location.state?.from?.pathname || '/'))
-                .catch((err: ClientResponseError) => {
-                  if (err.status == 400) {
-                    toast({
-                      title: 'Invalid credentials',
-                      description:
-                        'user matching the email and password not found',
-                      status: 'error',
-                      isClosable: true
-                    })
-                    resetForm()
-                    return
-                  }
+                .catch(() => {
                   toast({
                     title: 'Something went wrong',
                     description: 'please try again after sometime',
@@ -116,42 +99,10 @@ const Login = () => {
                       />
                     </InputGroup>
                     <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
-                  </FormControl>
-                  <FormControl
-                    isInvalid={
-                      formik.touched.password && !!formik.errors.password
-                    }
-                  >
-                    <InputGroup>
-                      <InputLeftElement pointerEvents="none" color="gray.300">
-                        <Icon icon="bxs:lock-alt" color="gray" />
-                      </InputLeftElement>
-                      <Input
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder="Password"
-                        name="password"
-                        id="password"
-                        value={formik.values.password}
-                        onBlur={formik.handleBlur}
-                        onChange={formik.handleChange}
-                      />
-                      <InputRightElement width="4.5rem">
-                        <Button h="1.75rem" size="sm" onClick={handleShowClick}>
-                          {showPassword ? 'Hide' : 'Show'}
-                        </Button>
-                      </InputRightElement>
-                    </InputGroup>
-                    <FormErrorMessage>
-                      {formik.errors.password}
-                    </FormErrorMessage>
                     <FormHelperText textAlign="right">
-                      <Link
-                        as={RouterLink}
-                        to="/forgotpassword"
-                        color="teal.400"
-                      >
-                        Reset password?
-                      </Link>
+                      <RouterLink to="/login">
+                        <Link color="teal.400">Go to login</Link>
+                      </RouterLink>
                     </FormHelperText>
                   </FormControl>
                   <Button
@@ -161,7 +112,7 @@ const Login = () => {
                     colorScheme="teal"
                     width="full"
                   >
-                    Login
+                    Reset Password
                   </Button>
                 </Stack>
               </form>
@@ -169,14 +120,8 @@ const Login = () => {
           </Formik>
         </Box>
       </Stack>
-      <Box>
-        New to us?{' '}
-        <Link as={RouterLink} to="/register" color="teal.400">
-          Sign up?
-        </Link>
-      </Box>
     </Flex>
   )
 }
 
-export default Login
+export default ResetPassword

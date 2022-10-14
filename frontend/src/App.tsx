@@ -1,38 +1,56 @@
 import LoginPage from './page/login'
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import ForgotPasswordPage from './page/forgotpassword'
+import RegisterPage from './page/register'
+import Profile from './page/profile'
+import Damage from './page/damage'
+
+import { Routes, Route } from 'react-router-dom'
 import { RequireAuth, AlreadyAuthenticated } from './page/protected'
 
-import { usePocketBase } from './provider/pb'
-import { Button } from '@chakra-ui/react'
-
 const App = () => {
-  const backend = usePocketBase()
-  const navigate = useNavigate()
   return (
     <Routes>
       <Route
         path="/"
         element={
           <RequireAuth>
-            <>
-              <h1>Protected page</h1>
-              <Button
-                onClick={() => {
-                  backend.authStore.clear()
-                  navigate('/')
-                }}
-              >
-                Logout
-              </Button>
-            </>
+            <Damage />
           </RequireAuth>
         }
       />
+
+      <Route
+        path="/profile"
+        element={
+          <RequireAuth>
+            <Profile />
+          </RequireAuth>
+        }
+      />
+
       <Route
         path="login"
         element={
           <AlreadyAuthenticated>
             <LoginPage />
+          </AlreadyAuthenticated>
+        }
+      />
+
+      <Route
+        path="register"
+        element={
+          <AlreadyAuthenticated>
+            <RegisterPage />
+          </AlreadyAuthenticated>
+        }
+      />
+
+      <Route
+        path="forgotpassword"
+        element={
+          <AlreadyAuthenticated>
+            <ForgotPasswordPage />
           </AlreadyAuthenticated>
         }
       />
