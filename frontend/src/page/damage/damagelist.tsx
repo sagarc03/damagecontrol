@@ -60,7 +60,7 @@ function ProjectPage({ project }: { project: Record }) {
     }
 
     backend.records
-      .getList('cost', 1, 500, {
+      .getList('expense', 1, 500, {
         filter: `project.id = "${project.id}"`
       })
       .then((data) => {
@@ -107,14 +107,14 @@ function ProjectPage({ project }: { project: Record }) {
                   validationSchema={validationSchema}
                   onSubmit={({ name, damage }, { resetForm }) =>
                     backend.records
-                      .create('cost', {
+                      .create('expense', {
                         name,
                         cost: damage,
                         project: project.id
                       })
                       .then(() => {
                         toast({
-                          title: `Damage of ${damage} added to ${project.name}`,
+                          title: `Expense of ${damage} added to ${project.name}`,
                           status: 'success',
                           isClosable: true
                         })
@@ -259,7 +259,7 @@ function ProjectPage({ project }: { project: Record }) {
           <Thead>
             <Tr>
               <Th>Name</Th>
-              <Th isNumeric>Damage</Th>
+              <Th isNumeric>Expense</Th>
               <Th>Tags</Th>
               <Th>File</Th>
               <Th>Created on</Th>
