@@ -20,16 +20,20 @@ import {
   FormControl,
   FormErrorMessage,
   Table,
+  Tag,
   Thead,
   Tbody,
   Tr,
   Th,
   Td,
-  TableContainer
+  TableContainer,
+  Link,
+  IconButton
 } from '@chakra-ui/react'
 import { usePocketBase } from '../../provider/pb'
 import { ClientResponseError, Record } from 'pocketbase'
 import { Formik } from 'formik'
+import { Icon as Iconify } from '@iconify/react'
 
 import * as Yup from 'yup'
 import { useEffect, useState } from 'react'
@@ -45,7 +49,7 @@ function ProjectPage({ project }: { project: Record }) {
     name: '',
     damage: 0,
     tags: '',
-    files: []
+    files: ''
   }
   const validationSchema = Yup.object({
     name: Yup.string().required().min(10).max(100),
@@ -58,7 +62,6 @@ function ProjectPage({ project }: { project: Record }) {
     if (!project) {
       return
     }
-
     backend.records
       .getList('expense', 1, 500, {
         filter: `project.id = "${project.id}"`
@@ -67,8 +70,6 @@ function ProjectPage({ project }: { project: Record }) {
         setDamageList(data.items)
       })
       .catch((err: ClientResponseError) => {
-        console.log(err.data)
-        console.log(project)
         if (err.status >= 400) {
           toast({
             title: 'something went wrong',
@@ -105,13 +106,15 @@ function ProjectPage({ project }: { project: Record }) {
                 <Formik
                   initialValues={initialValue}
                   validationSchema={validationSchema}
-                  onSubmit={({ name, damage }, { resetForm }) =>
+                  onSubmit={({ name, damage, tags, files }, { resetForm }) => {
+                    const formData = new FormData()
+                    formData.append('files', files)
+                    formData.append('name', name)
+                    formData.append('cost', damage)
+                    formData.append('tags', tags)
+                    formData.append('project', project.id)
                     backend.records
-                      .create('expense', {
-                        name,
-                        cost: damage,
-                        project: project.id
-                      })
+                      .create('expense', formData)
                       .then(() => {
                         toast({
                           title: `Expense of ${damage} added to ${project.name}`,
@@ -130,10 +133,9 @@ function ProjectPage({ project }: { project: Record }) {
                             status: 'error',
                             isClosable: true
                           })
-                          console.log(err.data)
                         }
                       })
-                  }
+                  }}
                 >
                   {(formik) => (
                     <form onSubmit={formik.handleSubmit}>
@@ -212,12 +214,19 @@ function ProjectPage({ project }: { project: Record }) {
                             <Input
                               id="file"
                               type="file"
-                              multiple
                               placeholder="file"
                               name="files"
-                              value={formik.values.files}
                               onBlur={formik.handleBlur}
-                              onChange={formik.handleChange}
+                              onChange={(
+                                event: React.FormEvent<HTMLInputElement>
+                              ) => {
+                                if (event.currentTarget.files) {
+                                  formik.setFieldValue(
+                                    'files',
+                                    event.currentTarget.files[0]
+                                  )
+                                }
+                              }}
                             />
                           </InputGroup>
                           <FormErrorMessage>
@@ -270,9 +279,57 @@ function ProjectPage({ project }: { project: Record }) {
               <Tr key={value.id}>
                 <Td>{value.name}</Td>
                 <Td isNumeric>{value.cost}</Td>
-                <Td></Td>
-                <Td></Td>
+                <Td>
+                  {value.tags.split(' ').map((tag: string, key: number) => (
+                    <Tag key={key} mx="1">
+                      {tag}
+                    </Tag>
+                  ))}
+                </Td>
+                <Td>
+                  <Link
+                    href={backend.records.getFileUrl(value, value.files)}
+                    isExternal
+                  >
+                    {value.files}
+                  </Link>
+                </Td>
                 <Td>{value.created}</Td>
+                <Td>
+                  <IconButton
+                    colorScheme="red"
+                    aria-label="delete expense"
+                    onClick={() => {
+                      backend.records
+                        .delete('expense', value.id)
+                        .then(() => {
+                          toast({
+                            title: `Expense of ${value.name} deleted from ${project.name}`,
+                            status: 'success',
+                            isClosable: true
+                          })
+                          getDamageForProject()
+                        })
+                        .catch((err: ClientResponseError) => {
+                          if (err.status >= 400) {
+                            toast({
+                              title: 'something went wrong',
+                              status: 'error',
+                              isClosable: true
+                            })
+                          }
+                        })
+                    }}
+                    icon={
+                      <Iconify
+                        icon="material-symbols:delete-rounded"
+                        width="28"
+                        height="28"
+                        color="white"
+                      />
+                    }
+                  />
+                </Td>
               </Tr>
             ))}
           </Tbody>
