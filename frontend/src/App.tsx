@@ -3,6 +3,7 @@ import ForgotPasswordPage from './page/forgotpassword'
 import RegisterPage from './page/register'
 import Profile from './page/profile'
 import Damage from './page/damage'
+import Report from './page/report'
 
 import { Routes, Route } from 'react-router-dom'
 import { RequireAuth, AlreadyAuthenticated } from './page/protected'
@@ -15,6 +16,15 @@ const App = () => {
         element={
           <RequireAuth>
             <Damage />
+          </RequireAuth>
+        }
+      />
+
+      <Route
+        path="/report"
+        element={
+          <RequireAuth>
+            <Report />
           </RequireAuth>
         }
       />

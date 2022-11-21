@@ -17,9 +17,12 @@
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@uiw/react-codemirror": "^4.12.3",
+    "chart.js": "^4.0.1",
     "framer-motion": "^6.5.1",
+    "lodash": "^4.17.21",
     "pocketbase": "^0.7.1",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.0.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.1"
   },

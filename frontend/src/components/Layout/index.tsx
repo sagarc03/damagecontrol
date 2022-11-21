@@ -45,6 +45,16 @@ export default function Layout({ children }: { children: JSX.Element }) {
                 />
               </Link>
             </Tooltip>
+            <Tooltip label="report" placement="right">
+              <Link as={RouterLink} to="/report">
+                <Iconify
+                  icon="mdi:report-areaspline"
+                  width="48"
+                  height="48"
+                  color="white"
+                />
+              </Link>
+            </Tooltip>
           </VStack>
           <Spacer />
           <Box p="3" mb="2">

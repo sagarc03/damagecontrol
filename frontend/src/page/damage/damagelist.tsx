@@ -1,42 +1,42 @@
 import {
   Box,
-  Center,
-  Text,
-  Flex,
-  Spacer,
   Button,
-  useDisclosure,
-  useToast,
+  Center,
   Drawer,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  DrawerHeader,
   DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
   DrawerFooter,
-  Stack,
-  InputGroup,
-  Input,
+  DrawerHeader,
+  DrawerOverlay,
+  Flex,
   FormControl,
   FormErrorMessage,
-  Table,
-  Tag,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
+  IconButton,
+  Input,
+  InputGroup,
   Link,
-  IconButton
+  Spacer,
+  Stack,
+  Table,
+  TableContainer,
+  Tag,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  useDisclosure,
+  useToast
 } from '@chakra-ui/react'
-import { usePocketBase } from '../../provider/pb'
-import { ClientResponseError, Record } from 'pocketbase'
-import { Formik } from 'formik'
 import { Icon as Iconify } from '@iconify/react'
+import { Formik } from 'formik'
+import { ClientResponseError, Record } from 'pocketbase'
+import { usePocketBase } from '../../provider/pb'
 
-import * as Yup from 'yup'
 import { useEffect, useState } from 'react'
+import * as Yup from 'yup'
 
 function ProjectPage({ project }: { project: Record }) {
   const backend = usePocketBase()
@@ -97,6 +97,7 @@ function ProjectPage({ project }: { project: Record }) {
         >
           Add Damage
         </Button>
+
         <Drawer isOpen={isOpen} placement="right" onClose={onClose} size="sm">
           <DrawerOverlay>
             <DrawerContent>
@@ -154,7 +155,7 @@ function ProjectPage({ project }: { project: Record }) {
                             <Input
                               id="name"
                               type="name"
-                              placeholder="Project name"
+                              placeholder="Expense name"
                               name="name"
                               value={formik.values.name}
                               onBlur={formik.handleBlur}
